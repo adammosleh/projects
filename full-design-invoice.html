@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فاتورة التصميم الكامل - متجر العبايات</title>
+    <meta name="theme-color" content="#8b5cf6">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="auth-system.js"></script>
+    <script src="app.js"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50 border-b-2 border-purple-100">
+        <nav class="container mx-auto px-2 sm:px-4 py-2 sm:py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-reverse space-x-2 sm:space-x-4">
+                    <div class="bg-purple-600 p-2 sm:p-3 rounded-full">
+                        <i class="fas fa-store text-white text-lg sm:text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-sm sm:text-lg md:text-2xl font-bold text-gray-800">فاتورة التصميم الكامل</h1>
+                        <p class="text-xs sm:text-sm text-gray-600 hidden sm:block">تصميم العباية بالكامل (جسم، وشاح، قبعة، أكمام)</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-reverse space-x-2 sm:space-x-6">
+                    <button onclick="window.location.href='index.html'" class="btn-secondary text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center text-xs sm:text-sm">
+                        <i class="fas fa-arrow-right ml-1 sm:ml-2"></i>
+                        <span class="hidden sm:inline">العودة</span>
+                        <span class="sm:hidden">رجوع</span>
+                    </button>
+                    <button id="login-btn" class="btn-primary text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center text-xs sm:text-sm">
+                        <i class="fas fa-user ml-1 sm:ml-2"></i>
+                        <span class="hidden sm:inline">تسجيل الدخول</span>
+                        <span class="sm:hidden">دخول</span>
+                    </button>
+                    <button id="logout-btn" class="btn-secondary text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center text-xs sm:text-sm hidden">
+                        <i class="fas fa-sign-out-alt ml-1 sm:ml-2"></i>
+                        <span class="hidden sm:inline">تسجيل الخروج</span>
+                        <span class="sm:hidden">خروج</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Invoice Form -->
+    <main class="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- Invoice Header -->
+            <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6">
+                <div class="flex justify-between items-center">
+                    <div class="text-right">
+                        <h1 class="text-2xl sm:text-3xl font-bold text-purple-800 mb-2">فاتورة التصميم الكامل</h1>
+                        <p class="text-gray-600"> مركز السهم للخياطة</p>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-lg font-semibold text-gray-800 mb-1">رقم الفاتورة</div>
+                        <div id="invoice-number" class="text-2xl font-bold text-purple-600">INV-001</div>
+                        <div id="invoice-date" class="text-sm text-gray-600 mt-1">2024/01/01</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Information -->
+            <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-user ml-2 text-purple-600"></i>
+                    معلومات العميل
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">اسم العميل <span class="text-red-500">*</span></label>
+                        <input type="text" id="customer-name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="أدخل اسم العميل">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">رقم الهاتف <span class="text-red-500">*</span></label>
+                        <input type="tel" id="customer-phone" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="أدخل رقم الهاتف">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">العنوان <span class="text-red-500">*</span></label>
+                        <input type="text" id="customer-address" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="أدخل العنوان">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fabric Details -->
+            <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-tshirt ml-2 text-purple-600"></i>
+                    تفاصيل القماش
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="border border-gray-300 px-4 py-2 text-right text-sm font-medium text-gray-700">نوع القماش</th>
+                                <th class="border border-gray-300 px-4 py-2 text-right text-sm font-medium text-gray-700" colspan="4"> 
+                                    <select name="fabric-type" id="fabric-type" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                         <option value="">اختر النوع</option>
+                                        <option value="cotton">قطن</option>
+                                        <option value="silk">حرير</option>
+                                        <option value="wool">صوف</option>
+                                        <option value="linen">كتان</option>
+                                        <option value="polyester">بوليستر</option>
+                                    </select>
+                                </th>
+                                <th class="border border-gray-300 px-4 py-2 text-right text-sm font-medium text-gray-700" >رقم الموديل</th>
+                                <th class="border border-gray-300 px-4 py-2 text-right text-sm font-medium text-gray-700" colspan="4"> 
+                                    <select name="model-number" id="model-number" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        <option value="">اختر رقم الموديل</option>
+                                        <option value="model-001">موديل 001</option>
+                                        <option value="model-002">موديل 002</option>
+                                        <option value="model-003">موديل 003</option>
+                                        <option value="model-004">موديل 004</option>
+                                        <option value="custom">مخصص</option>
+                                    </select>
+                                </th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-2">
+                                    <span class="font-medium">كتف</span>
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2" colspan="11">
+                                    <select id="shoulder-fabric" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        <option value="">اختر نوع القماش</option>
+                                        <option value="cotton">قطن</option>
+                                        <option value="silk">حرير</option>
+                                        <option value="wool">صوف</option>
+                                        <option value="linen">كتان</option>
+                                        <option value="polyester">بوليستر</option>
+                                    </select>
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-2 bg-gray-50">
+                                    <span class="font-medium">الأمام</span>
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2" colspan="11">
+                                    <select id="front-fabric" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        <option value="">اختر نوع القماش</option>
+                                        <option value="cotton">قطن</option>
+                                        <option value="silk">حرير</option>
+                                        <option value="wool">صوف</option>
+                                        <option value="linen">كتان</option>
+                                        <option value="polyester">بوليستر</option>
+                                    </select>
+                                </td>
+                                
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-2 bg-gray-50">
+                                    <span class="font-medium">فتحة اليد</span>
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2" colspan="11">
+                                    <select id="sleeve-opening-fabric" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        <option value="">اختر نوع القماش</option>
+                                        <option value="cotton">قطن</option>
+                                        <option value="silk">حرير</option>
+                                        <option value="wool">صوف</option>
+                                        <option value="linen">كتان</option>
+                                        <option value="polyester">بوليستر</option>
+                                    </select>
+                                </td>
+                               
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-2 bg-gray-50">
+                                    <span class="font-medium">القياس</span>
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2">
+                                   <span>طول</span>
+                                   <input type="text" id="measurement-length" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2">
+                                    <span>كتف</span>
+                                    <input type="text" id="measurement-shoulder" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2">
+                                    <span>يد</span>
+                                    <input type="text" id="measurement-hand" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2">
+                                    <span>صدر</span>
+                                    <input type="text" id="measurement-chest" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2">
+                                    <span>خصر</span>
+                                    <input type="text" id="measurement-waist" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2">
+                                    <span>طاقية</span>
+                                    <input type="text" id="measurement-hat" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2">
+                                    <span>طول البنطلون</span>
+                                    <input type="text" id="measurement-pant-length" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2">
+                                    <span>حزام</span>
+                                    <input type="text" id="measurement-belt" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2">
+                                    <span>ورك</span>
+                                    <input type="text" id="measurement-hip" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-2 bg-gray-50">
+                                    <span class="font-medium">الشعار</span>
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2" colspan="2">
+                                   <span>القماش</span>
+                                   <input type="text" id="logo-fabric" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent" >
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2" colspan="2">
+                                   <span>جهة</span>
+                                   <input type="text" id="logo-direction" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2" colspan="2">
+                                   <span>وجهة</span>
+                                   <input type="text" id="logo-orientation" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2">
+                                   <span>الخلف</span>
+                                   <input type="text" id="logo-back" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2">
+                                   <span>الخط</span>
+                                   <select id="logo-font" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                     <option value="">اختر الخط</option>
+                                     <option value="diwani">الخط الديواني</option>
+                                     <option value="naskh">الخط النسخ</option>
+                                     <option value="thuluth">الخط الثلث</option>
+                                     <option value="kufi">الخط الكوفي</option>
+                                   </select>
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2">
+                                   <span>لون التطريز</span>
+                                   <input type="text" id="logo-embroidery-color" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-2 bg-gray-50">
+                                    <span class="font-medium">الكوفية</span>
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2" colspan="11">
+                                    <select id="scarf-size" class="w-full px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                        <option value="">اختر المقاس</option>
+                                        <option value="xs">XS</option>
+                                        <option value="s">S</option>
+                                        <option value="m">M</option>
+                                        <option value="l">L</option>
+                                        <option value="xl">XL</option>
+                                        <option value="xxl">XXL</option>
+                                        <option value="3xl">3XL</option>
+                                        <option value="custom">مخصص</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pricing and Delivery -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <!-- Pricing -->
+                <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-money-bill-wave ml-2 text-green-600"></i>
+                        التسعير
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">السعر الإجمالي</label>
+                            <input type="number" id="total-price" min="0" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="أدخل السعر الإجمالي" >
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">المدفوع</label>
+                            <input type="number" id="paid-amount" min="0" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="المبلغ المدفوع">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">المتبقي</label>
+                            <input type="text" id="remaining-amount" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="المبلغ المتبقي" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delivery -->
+                <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-truck ml-2 text-blue-600"></i>
+                        التسليم
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">تاريخ التسليم</label>
+                            <input type="date" id="delivery-date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">يوم التسليم</label>
+                            <select id="delivery-day" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="">اختر اليوم</option>
+                                <option value="saturday">السبت</option>
+                                <option value="sunday">الأحد</option>
+                                <option value="monday">الإثنين</option>
+                                <option value="tuesday">الثلاثاء</option>
+                                <option value="wednesday">الأربعاء</option>
+                                <option value="thursday">الخميس</option>
+                                <option value="friday">الجمعة</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-sticky-note ml-2 text-yellow-600"></i>
+                    ملاحظات
+                </h3>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ملاحظات إضافية</label>
+                    <textarea id="invoice-notes" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="أي ملاحظات إضافية"></textarea>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-center space-x-reverse space-x-4 mb-8">
+                <button onclick="saveInvoice()" class="bg-purple-600 text-white px-8 py-3 rounded-lg hover:bg-purple-700 transition flex items-center">
+                    <i class="fas fa-save ml-2"></i>
+                    حفظ الفاتورة
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2024 متجر العبايات الراقية. جميع الحقوق محفوظة</p>
+        </div>
+    </footer>
+
+    <script src="full-design-invoice.js"></script>
+</body>
+</html>

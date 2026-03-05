@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فاتورة عمل الشعارات - متجر العبايات</title>
+    <meta name="theme-color" content="#8b5cf6">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="auth-system.js"></script>
+    <script src="app.js"></script>
+    <style>
+        /* Custom Styles */
+        .form-input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .invoice-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Print Styles */
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { font-size: 12pt; }
+            .invoice-card { box-shadow: none; border: 1px solid #ccc; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50 border-b-2 border-purple-100">
+        <nav class="container mx-auto px-2 sm:px-4 py-2 sm:py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-reverse space-x-2 sm:space-x-4">
+                    <div class="bg-purple-600 p-2 sm:p-3 rounded-full">
+                        <i class="fas fa-store text-white text-lg sm:text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-sm sm:text-lg md:text-2xl font-bold text-gray-800">فاتورة عمل الشعارات</h1>
+                        <p class="text-xs sm:text-sm text-gray-600 hidden sm:block">إصدار فواتير للشعارات والطباعة</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-reverse space-x-2 sm:space-x-6">
+                    <button onclick="window.location.href='index.html'" class="bg-gray-500 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center text-xs sm:text-sm hover:bg-gray-600 transition">
+                        <i class="fas fa-arrow-right ml-1 sm:ml-2"></i>
+                        <span class="hidden sm:inline">العودة للرئيسية</span>
+                        <span class="sm:hidden">الرئيسية</span>
+                    </button>
+                    <a href="issued-invoices.html" class="bg-blue-500 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center text-xs sm:text-sm hover:bg-blue-600 transition">
+                        <i class="fas fa-list ml-1 sm:ml-2"></i>
+                        <span class="hidden sm:inline">الفواتير الصادرة</span>
+                        <span class="sm:hidden">الفواتير</span>
+                    </a>
+                    <button id="login-btn" class="bg-purple-600 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center text-xs sm:text-sm">
+                        <i class="fas fa-user ml-1 sm:ml-2"></i>
+                        <span class="hidden sm:inline">تسجيل الدخول</span>
+                        <span class="sm:hidden">دخول</span>
+                    </button>
+                    <button id="logout-btn" class="bg-gray-500 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center text-xs sm:text-sm hidden">
+                        <i class="fas fa-sign-out-alt ml-1 sm:ml-2"></i>
+                        <span class="hidden sm:inline">تسجيل الخروج</span>
+                        <span class="sm:hidden">خروج</span>
+                    </button>
+                    <button id="install-btn" class="bg-green-600 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center text-xs sm:text-sm hidden">
+                        <i class="fas fa-download ml-1 sm:ml-2"></i>
+                        <span class="hidden sm:inline">تثبيت التطبيق</span>
+                        <span class="sm:hidden">تثبيت</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Invoice Form -->
+    <main class="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Invoice Header Card -->
+            <div class="invoice-card mb-6 fade-in">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+                    <div class="text-right">
+                        <h2 class="text-2xl font-bold text-gray-800">فاتورة تصميم الشعار</h2>
+                        <div class="text-sm text-gray-500 mt-2">
+                            التاريخ: <span id="invoice-date"></span>
+                        </div>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-sm text-gray-500">رقم الفاتورة:</div>
+                        <div id="invoice-number" class="font-bold text-purple-600 text-lg">LOGO-001</div>
+                    </div>
+                </div>
+
+                <!-- Customer Information Section -->
+                <div class="invoice-card mb-6 fade-in">
+                    <h3 class="section-title">
+                        <i class="fas fa-user ml-2"></i>
+                        معلومات العميل
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">اسم العميل <span class="text-red-500">*</span></label>
+                            <input type="text" id="customer-name" class="form-input" placeholder="أدخل اسم العميل الكامل" required>
+                            <span class="text-xs text-red-500 hidden" id="name-error">اسم العميل مطلوب</span>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">رقم الهاتف <span class="text-red-500">*</span></label>
+                            <input type="tel" id="customer-phone" class="form-input" placeholder="أدخل رقم الهاتف" required>
+                            <span class="text-xs text-red-500 hidden" id="phone-error">رقم الهاتف مطلوب</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logo Information Section -->
+                <div class="invoice-card mb-6 fade-in">
+                    <h3 class="section-title">
+                        <i class="fas fa-tag ml-2"></i>
+                        معلومات الشعار
+                    </h3>
+                    <div class="space-y-4">
+                        <!-- القماش -->
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700 w-24">القماش:</label>
+                            <select id="fabric" class="form-input flex-1">
+                                <option value="">اختر القماش</option>
+                                <option value="cotton">قطن</option>
+                                <option value="polyester">بوليستر</option>
+                                <option value="silk">حرير</option>
+                                <option value="wool">صوف</option>
+                                <option value="linen">كتان</option>
+                            </select>
+                        </div>
+
+                        <!-- الجهة الأولى -->
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700 w-24">جهة:</label>
+                            <select id="side1" class="form-input flex-1">
+                                <option value="">اختر الجهة</option>
+                                <option value="front">الأمام</option>
+                                <option value="back">الخلف</option>
+                                <option value="left">اليسار</option>
+                                <option value="right">اليمين</option>
+                                <option value="chest">الصدر</option>
+                            </select>
+                        </div>
+
+                        <!-- الجهة الثانية -->
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700 w-24">وجهة:</label>
+                            <select id="side2" class="form-input flex-1">
+                                <option value="">اختر الوجهة</option>
+                                <option value="front">الأمام</option>
+                                <option value="back">الخلف</option>
+                                <option value="left">اليسار</option>
+                                <option value="right">اليمين</option>
+                                <option value="sleeve">الأكمام</option>
+                            </select>
+                        </div>
+
+                        <!-- الخلف -->
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700 w-24">الخلف:</label>
+                            <select id="back" class="form-input flex-1">
+                                <option value="">اختر الخلف</option>
+                                <option value="plain">عادي</option>
+                                <option value="pattern">بنقوش</option>
+                                <option value="embroidered">مطرز</option>
+                                <option value="printed">مطبوع</option>
+                            </select>
+                        </div>
+
+                        <!-- لون التطريز -->
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700 w-24">لون التطريز:</label>
+                            <select id="embroidery-color" class="form-input flex-1">
+                                <option value="">اختر اللون</option>
+                                <option value="black">أسود</option>
+                                <option value="white">أبيض</option>
+                                <option value="red">أحمر</option>
+                                <option value="blue">أزرق</option>
+                                <option value="green">أخضر</option>
+                                <option value="gold">ذهبي</option>
+                                <option value="silver">فضي</option>
+                                <option value="purple">بنفسجي</option>
+                            </select>
+                        </div>
+
+                        <!-- نوع الخط -->
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-medium text-gray-700 w-24">نوع الخط:</label>
+                            <select id="font-type" class="form-input flex-1">
+                                <option value="">اختر الخط</option>
+                                <option value="arabic">عربي</option>
+                                <option value="thuluth">ثلث</option>
+                                <option value="naskh">نسخ</option>
+                                <option value="diwani">ديواني</option>
+                                <option value="kufi">كوفي</option>
+                                <option value="modern">حديث</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing Section -->
+                <div class="invoice-card mb-6 fade-in">
+                    <h3 class="section-title">
+                        <i class="fas fa-dollar-sign ml-2"></i>
+                        معلومات التسعير
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">السعر الإجمالي</label>
+                            <input type="number" id="price" class="form-input" placeholder="0.00" step="0.01" min="0">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">المبلغ المدفوع</label>
+                            <input type="number" id="paid" class="form-input" placeholder="0.00" step="0.01" min="0">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">المبلغ المتبقي</label>
+                            <input type="text" id="remaining" class="form-input bg-gray-100" readonly placeholder="0.00">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delivery Information Section -->
+                <div class="invoice-card mb-6 fade-in">
+                    <h3 class="section-title">
+                        <i class="fas fa-truck ml-2"></i>
+                        معلومات التسليم
+                    </h3>
+                    <div class="space-y-4">
+                        <!-- موعد التسليم -->
+                        <div>
+                            <label class="text-sm font-medium text-gray-700 block mb-2">موعد التسليم:</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- التاريخ -->
+                                <div>
+                                    <label class="text-sm text-gray-600 block mb-1">التاريخ:</label>
+                                    <input type="date" id="delivery-date" class="form-input">
+                                </div>
+                                <!-- اليوم -->
+                                <div>
+                                    <label class="text-sm text-gray-600 block mb-1">اليوم:</label>
+                                    <select id="delivery-day" class="form-input">
+                                        <option value="اختر اليوم">اختر اليوم</option>
+                                        <option value="saturday">السبت</option>
+                                        <option value="sunday">الأحد</option>
+                                        <option value="monday">الإثنين</option>
+                                        <option value="tuesday">الثلاثاء</option>
+                                        <option value="wednesday">الأربعاء</option>
+                                        <option value="thursday">الخميس</option>
+                                        <option value="friday">الجمعة</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information Section -->
+                <div class="invoice-card mb-6 fade-in">
+                    <h3 class="section-title">
+                        <i class="fas fa-info-circle ml-2"></i>
+                        معلومات إضافية
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">ملاحظات إضافية</label>
+                            <textarea id="notes" rows="4" class="form-input" placeholder="أي ملاحظات إضافية للفاتورة"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">حالة الفاتورة</label>
+                            <select id="invoice-status" class="form-input">
+                                <option value="pending">قيد الانتظار</option>
+                                <option value="processing">قيد المعالجة</option>
+                                <option value="completed">مكتملة</option>
+                                <option value="cancelled">ملغاة</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Save Button -->
+    <div class="container mx-auto px-4 pb-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex justify-center space-x-reverse space-x-4">
+                <button onclick="saveInvoice()" class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition transform hover:scale-105">
+                    <i class="fas fa-save ml-2"></i>
+                    حفظ
+                </button>
+                <button onclick="printInvoice()" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition transform hover:scale-105">
+                    <i class="fas fa-print ml-2"></i>
+                    طباعة
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <!-- <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2024 متجر العبايات الراقية. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer> -->
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="fixed top-4 right-4 z-50"></div>
+
+    <!-- Auto Date Script -->
+    <script>
+        // Set current date automatically
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateElement = document.getElementById('invoice-date');
+            if (dateElement) {
+                const today = new Date();
+                const formattedDate = today.toLocaleDateString('ar-SA', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                dateElement.textContent = formattedDate;
+            }
+        });
+    </script>
+
+    <script src="logo-invoice.js"></script>
+</body>
+</html>

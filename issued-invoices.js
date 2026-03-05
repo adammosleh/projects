@@ -128,10 +128,24 @@ class IssuedInvoicesSystem {
     // Update statistics
     updateStatistics() {
         try {
-            // Count invoices by type
+            // Count invoices by type - check all loaded invoices
             const logoInvoices = this.invoices.filter(inv => inv.type === 'logo').length;
             const fullDesignInvoices = this.invoices.filter(inv => inv.type === 'full-design').length;
             const totalInvoices = this.invoices.length;
+            
+            // Also count from localStorage for old invoices that might not have proper type
+            const issuedInvoices = JSON.parse(localStorage.getItem('issued-invoices') || '[]');
+            const oldFullDesignInvoices = issuedInvoices.filter(inv => 
+                !inv.type && (
+                    (inv.number && inv.number.toString().includes('FD')) ||
+                    (inv.number && inv.number.toString().includes('Full')) ||
+                    (inv.customer && inv.designType === 'full-design') ||
+                    (inv.orderType && inv.orderType.includes('full'))
+                )
+            ).length;
+            
+            // Combine old and new full design invoices
+            const totalFullDesignInvoices = fullDesignInvoices + oldFullDesignInvoices;
             
             // Calculate total revenue
             const totalRevenue = this.invoices.reduce((sum, inv) => {
@@ -153,7 +167,7 @@ class IssuedInvoicesSystem {
             }
             
             if (fullDesignInvoicesElement) {
-                fullDesignInvoicesElement.textContent = fullDesignInvoices;
+                fullDesignInvoicesElement.textContent = totalFullDesignInvoices;
             }
             
             if (totalRevenueElement) {
@@ -791,9 +805,12 @@ window.closeInvoiceModal = function() {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    try {
-        window.issuedInvoicesSystem = new IssuedInvoicesSystem();
-    } catch (error) {
-        console.error('Error initializing issued invoices system:', error);
+    // Only initialize if we're on the issued invoices page
+    if (window.location.pathname.endsWith('issued-invoices.html')) {
+        try {
+            window.issuedInvoicesSystem = new IssuedInvoicesSystem();
+        } catch (error) {
+            console.error('Error initializing issued invoices system:', error);
+        }
     }
 });

@@ -315,10 +315,15 @@ class FullDesignInvoiceSystem {
                 notes: document.getElementById('invoice-notes')?.value || ''
             };
             
-            // Save to issued-invoices only (to avoid duplication)
+            // Save to both issued-invoices and full-design-invoices for proper counting
             const issuedInvoices = JSON.parse(localStorage.getItem('issued-invoices') || '[]');
             issuedInvoices.push(newInvoice);
             localStorage.setItem('issued-invoices', JSON.stringify(issuedInvoices));
+            
+            // Also save to full-design-invoices for statistics
+            const fullDesignInvoices = JSON.parse(localStorage.getItem('full-design-invoices') || '[]');
+            fullDesignInvoices.push(newInvoice);
+            localStorage.setItem('full-design-invoices', JSON.stringify(fullDesignInvoices));
             
             // Show success message
             this.showNotification('تم حفظ الفاتورة بنجاح! سيتم تحويلك إلى صفحة الفواتير.', 'success');
@@ -364,7 +369,7 @@ class FullDesignInvoiceSystem {
 }
 
 // Global functions
-window.saveInvoice = function() {
+window.saveFullDesignInvoice = function() {
     if (window.fullDesignInvoiceSystem) {
         window.fullDesignInvoiceSystem.saveInvoice();
     } else {
@@ -390,16 +395,19 @@ window.calculateRemaining = function() {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    try {
-        // Simple initialization
-        window.fullDesignInvoiceSystem = new FullDesignInvoiceSystem();
-        
-        // Initialize auth system if available
-        if (typeof AuthSystem !== 'undefined') {
-            window.authSystem = new AuthSystem();
+    // Only initialize if we're on the full design invoice page
+    if (window.location.pathname.endsWith('full-design-invoice.html')) {
+        try {
+            // Simple initialization
+            window.fullDesignInvoiceSystem = new FullDesignInvoiceSystem();
+            
+            // Initialize auth system if available
+            if (typeof AuthSystem !== 'undefined') {
+                window.authSystem = new AuthSystem();
+            }
+            
+        } catch (error) {
+            console.error('Error during initialization:', error);
         }
-        
-    } catch (error) {
-        console.error('Error during initialization:', error);
     }
 });

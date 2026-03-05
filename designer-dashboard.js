@@ -539,8 +539,11 @@ let dashboard;
 
 // Initialize dashboard when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    dashboard = new DesignerDashboard();
-    window.dashboard = dashboard;
+    // Only initialize if we're on the designer dashboard page
+    if (window.location.pathname.endsWith('designer-dashboard.html')) {
+        dashboard = new DesignerDashboard();
+        window.dashboard = dashboard;
+    }
 });
 
 // Filter orders

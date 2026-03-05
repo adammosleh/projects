@@ -146,9 +146,14 @@ window.openFullDesignInvoice = function() {
 
 // Initialize App when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded, initializing app...');
-    window.app = new App();
-    console.log('App initialized successfully!');
+    // Only initialize app if we're on the main page
+    if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+        console.log('DOM loaded, initializing app...');
+        window.app = new App();
+        console.log('App initialized successfully!');
+    } else {
+        console.log('Not on main page, skipping app initialization');
+    }
 });
 
 // Export for module usage

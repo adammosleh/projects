@@ -48,12 +48,8 @@ class LogoInvoiceSystem {
     setupEventListeners() {
         console.log('Setting up event listeners...');
         
-        // Save button
-        const saveBtn = document.getElementById('save-invoice-btn');
-        if (saveBtn) {
-            saveBtn.addEventListener('click', () => this.saveInvoice());
-        }
-
+        // Note: Save button is handled by onclick in HTML
+        
         // Print button
         const printBtn = document.getElementById('print-invoice-btn');
         if (printBtn) {
@@ -246,9 +242,15 @@ class LogoInvoiceSystem {
 
     // Save to localStorage
     saveToLocalStorage(data) {
-        const invoices = JSON.parse(localStorage.getItem('logo-invoices') || '[]');
-        invoices.push(data);
-        localStorage.setItem('logo-invoices', JSON.stringify(invoices));
+        // Save to both issued-invoices and logo-invoices for proper counting
+        const issuedInvoices = JSON.parse(localStorage.getItem('issued-invoices') || '[]');
+        issuedInvoices.push(data);
+        localStorage.setItem('issued-invoices', JSON.stringify(issuedInvoices));
+        
+        // Also save to logo-invoices for statistics
+        const logoInvoices = JSON.parse(localStorage.getItem('logo-invoices') || '[]');
+        logoInvoices.push(data);
+        localStorage.setItem('logo-invoices', JSON.stringify(logoInvoices));
     }
 
     // Print invoice
@@ -362,13 +364,16 @@ class LogoInvoiceSystem {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Logo invoice page loaded');
-    
-    try {
-        window.logoInvoiceSystem = new LogoInvoiceSystem();
-        console.log('✅ Logo invoice system initialized successfully!');
-    } catch (error) {
-        console.error('❌ Error initializing logo invoice system:', error);
+    // Only initialize if we're on the logo invoice page
+    if (window.location.pathname.endsWith('logo-invoice.html')) {
+        console.log('Logo invoice page loaded');
+        
+        try {
+            window.logoInvoiceSystem = new LogoInvoiceSystem();
+            console.log('✅ Logo invoice system initialized successfully!');
+        } catch (error) {
+            console.error('❌ Error initializing logo invoice system:', error);
+        }
     }
 });
 
@@ -382,7 +387,7 @@ window.handleFabricSideChange = function() {
 };
 
 // Global save function for button onclick
-window.saveInvoice = function() {
+window.saveLogoInvoice = function() {
     console.log('Save button clicked!');
     if (window.logoInvoiceSystem) {
         window.logoInvoiceSystem.saveInvoice();
@@ -392,7 +397,7 @@ window.saveInvoice = function() {
 };
 
 // Global print function for button onclick
-window.printInvoice = function() {
+window.printLogoInvoice = function() {
     console.log('Print button clicked!');
     if (window.logoInvoiceSystem) {
         window.logoInvoiceSystem.printInvoice();

@@ -397,9 +397,12 @@ window.calculateRemaining = function() {
 document.addEventListener('DOMContentLoaded', function() {
     // Only initialize if we're on the full design invoice page
     if (window.location.pathname.endsWith('full-design-invoice.html')) {
+        console.log('Full design invoice page loaded');
+        
         try {
             // Simple initialization
             window.fullDesignInvoiceSystem = new FullDesignInvoiceSystem();
+            console.log('✅ Full design invoice system initialized successfully!');
             
             // Initialize auth system if available
             if (typeof AuthSystem !== 'undefined') {
@@ -407,7 +410,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
         } catch (error) {
-            console.error('Error during initialization:', error);
+            console.error('❌ Error during initialization:', error);
         }
+    } else {
+        console.log('Not on full design invoice page, skipping initialization');
     }
 });

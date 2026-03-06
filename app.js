@@ -61,13 +61,8 @@ class App {
     // Update dashboard statistics
     updateDashboardStats() {
         try {
-            // Get all invoices from localStorage
-            const issuedInvoices = JSON.parse(localStorage.getItem('issued-invoices') || '[]');
-            const logoInvoices = JSON.parse(localStorage.getItem('logo-invoices') || '[]');
-            const fullDesignInvoices = JSON.parse(localStorage.getItem('full-design-invoices') || '[]');
-            
-            // Combine all invoices
-            const allInvoices = [...issuedInvoices, ...logoInvoices, ...fullDesignInvoices];
+            // Get all invoices from issued-invoices only to avoid duplication
+            const allInvoices = JSON.parse(localStorage.getItem('issued-invoices') || '[]');
             
             // Get current date
             const today = new Date();

@@ -200,6 +200,7 @@ class LogoInvoiceSystem {
         return {
             number: this.currentInvoice.number,
             date: new Date().toISOString(),
+            type: 'logo', // <-- إضافة نوع الفاتورة
             customerName: document.getElementById('customer-name')?.value || '',
             customerPhone: document.getElementById('customer-phone')?.value || '',
             fabric: document.getElementById('fabric')?.value || '',

@@ -88,34 +88,17 @@ class IssuedInvoicesSystem {
     // Load invoices from localStorage
     loadInvoices() {
         try {
-            const logoInvoices = JSON.parse(localStorage.getItem('logo-invoices') || '[]');
-            const fullDesignInvoices = JSON.parse(localStorage.getItem('full-design-invoices') || '[]');
+            // Load only from issued-invoices to avoid duplication
             const issuedInvoices = JSON.parse(localStorage.getItem('issued-invoices') || '[]');
             
             // Normalize invoice structure to ensure customerName exists
-            this.invoices = [
-                ...logoInvoices.map(inv => ({
-                    ...inv, 
-                    type: 'logo',
-                    customerName: inv.customer?.name || inv.customerName || 'N/A',
-                    customerPhone: inv.customer?.phone || inv.customerPhone || 'N/A',
-                    customerAddress: inv.customer?.address || inv.customerAddress || 'N/A'
-                })),
-                ...fullDesignInvoices.map(inv => ({
-                    ...inv, 
-                    type: 'full-design',
-                    customerName: inv.customer?.name || inv.customerName || 'N/A',
-                    customerPhone: inv.customer?.phone || inv.customerPhone || 'N/A',
-                    customerAddress: inv.customer?.address || inv.customerAddress || 'N/A'
-                })),
-                ...issuedInvoices.map(inv => ({
-                    ...inv, 
-                    type: 'issued',
-                    customerName: inv.customer?.name || inv.customerName || 'N/A',
-                    customerPhone: inv.customer?.phone || inv.customerPhone || 'N/A',
-                    customerAddress: inv.customer?.address || inv.customerAddress || 'N/A'
-                }))
-            ];
+            this.invoices = issuedInvoices.map(inv => ({
+                ...inv, 
+                type: inv.type || 'issued', // استخدام النوع الأصلي إذا موجود
+                customerName: inv.customerName || inv.customer?.name || 'N/A',
+                customerPhone: inv.customerPhone || inv.customer?.phone || 'N/A',
+                customerAddress: inv.customerAddress || inv.customer?.address || 'N/A'
+            }));
             
             // Sort by date (newest first)
             this.invoices.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -807,10 +790,15 @@ window.closeInvoiceModal = function() {
 document.addEventListener('DOMContentLoaded', function() {
     // Only initialize if we're on the issued invoices page
     if (window.location.pathname.endsWith('issued-invoices.html')) {
+        console.log('Issued invoices page loaded');
+        
         try {
             window.issuedInvoicesSystem = new IssuedInvoicesSystem();
+            console.log('✅ Issued invoices system initialized successfully!');
         } catch (error) {
-            console.error('Error initializing issued invoices system:', error);
+            console.error('❌ Error initializing issued invoices system:', error);
         }
+    } else {
+        console.log('Not on issued invoices page, skipping initialization');
     }
 });

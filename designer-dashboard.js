@@ -541,8 +541,13 @@ let dashboard;
 document.addEventListener('DOMContentLoaded', () => {
     // Only initialize if we're on the designer dashboard page
     if (window.location.pathname.endsWith('designer-dashboard.html')) {
+        console.log('Designer dashboard page loaded');
+        
         dashboard = new DesignerDashboard();
         window.dashboard = dashboard;
+        console.log('✅ Designer dashboard system initialized successfully!');
+    } else {
+        console.log('Not on designer dashboard page, skipping initialization');
     }
 });
 

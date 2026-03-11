@@ -100,11 +100,19 @@ class FullDesignInvoiceSystem {
             }
         });
 
+        // Add input event listener to total price field
+        const totalPriceElement = document.getElementById('total-price');
+        if (totalPriceElement) {
+            totalPriceElement.addEventListener('input', () => {
+                this.calculateRemainingAmount();
+            });
+        }
+
         // Add input event listener to paid amount field
         const paidElement = document.getElementById('paid-amount');
         if (paidElement) {
             paidElement.addEventListener('input', () => {
-                this.calculateRemainingFromPaid();
+                this.calculateRemainingAmount();
             });
         }
     }
@@ -118,24 +126,35 @@ class FullDesignInvoiceSystem {
         
         const total = bodyPrice + scarfPrice + hatPrice + sleevesPrice;
         
-        const totalElement = document.getElementById('total-price');
-        if (totalElement) {
-            totalElement.value = total.toFixed(2);
+        // Update component totals
+        document.getElementById('body-total').textContent = `${total.toFixed(2)} ريال`;
+        document.getElementById('scarf-total').textContent = `${scarfPrice.toFixed(2)} ريال`;
+        document.getElementById('hat-total').textContent = `${hatPrice.toFixed(2)} ريال`;
+        document.getElementById('sleeves-total').textContent = `${sleevesPrice.toFixed(2)} ريال`;
+        
+        // Update summary
+        document.getElementById('subtotal').textContent = `${total.toFixed(2)} ريال`;
+        document.getElementById('grand-total').textContent = `${total.toFixed(2)} ريال`;
+        
+        // Update total price input
+        const totalPriceInput = document.getElementById('total-price');
+        if (totalPriceInput) {
+            totalPriceInput.value = total.toFixed(2);
         }
         
-        this.calculateRemainingFromPaid();
+        // Calculate remaining
+        this.calculateRemainingAmount();
     }
 
-    // Calculate remaining from paid amount
-    calculateRemainingFromPaid() {
-        const total = parseFloat(document.getElementById('total-price')?.value || 0);
-        const paid = parseFloat(document.getElementById('paid-amount')?.value || 0);
+    // Calculate remaining amount
+    calculateRemainingAmount() {
+        const totalPrice = parseFloat(document.getElementById('total-price')?.value || 0);
+        const paidAmount = parseFloat(document.getElementById('paid-amount')?.value || 0);
+        const remaining = totalPrice - paidAmount;
         
-        const remaining = Math.max(0, total - paid);
-        
-        const remainingElement = document.getElementById('remaining-amount');
-        if (remainingElement) {
-            remainingElement.value = remaining.toFixed(2);
+        const remainingInput = document.getElementById('remaining-amount');
+        if (remainingInput) {
+            remainingInput.value = remaining.toFixed(2);
         }
     }
 
@@ -154,12 +173,12 @@ class FullDesignInvoiceSystem {
         // Price inputs change
         const priceInputs = ['body-price', 'scarf-price', 'hat-price', 'sleeves-price'];
         priceInputs.forEach(id => {
-            document.getElementById(id)?.addEventListener('input', () => this.calculateTotal());
+            document.getElementById(id)?.addEventListener('input', () => this.calculateTotalFromComponents());
         });
         
         // Pricing section inputs change
-        document.getElementById('total-price')?.addEventListener('input', () => this.calculateRemaining());
-        document.getElementById('paid-amount')?.addEventListener('input', () => this.calculateRemaining());
+        document.getElementById('total-price')?.addEventListener('input', () => this.calculateRemainingAmount());
+        document.getElementById('paid-amount')?.addEventListener('input', () => this.calculateRemainingAmount());
     }
 
     // Update invoice display
@@ -197,27 +216,8 @@ class FullDesignInvoiceSystem {
         const totalPriceInput = document.getElementById('total-price');
         if (totalPriceInput) {
             totalPriceInput.value = total.toFixed(2);
-        }
-        
-        this.currentInvoice.total = total;
-        
-        // Calculate remaining amount
-        this.calculateRemaining();
-    }
-    
-    // Calculate remaining amount
-    calculateRemaining() {
-        const totalPrice = parseFloat(document.getElementById('total-price')?.value || 0);
-        const paidAmount = parseFloat(document.getElementById('paid-amount')?.value || 0);
-        const remaining = totalPrice - paidAmount;
-        
-        const remainingInput = document.getElementById('remaining-amount');
-        if (remainingInput) {
-            // Use toLocaleString with 'en-US' to ensure English numbers
-            remainingInput.value = remaining.toLocaleString('en-US', { 
-                minimumFractionDigits: 2, 
-                maximumFractionDigits: 2 
-            });
+            // Calculate remaining after updating total
+            this.calculateRemainingAmount();
         }
     }
 
@@ -339,6 +339,120 @@ class FullDesignInvoiceSystem {
         }
     }
 
+    // Print invoice
+    printInvoice() {
+        if (this.isPrinting) {
+            console.log('Already printing...');
+            return;
+        }
+        
+        this.isPrinting = true;
+        console.log('Printing invoice...');
+        
+        // Create printable content with logo
+        const printContent = this.createPrintableInvoice();
+        
+        // Create a new document for printing
+        const printFrame = document.createElement('iframe');
+        printFrame.style.position = 'absolute';
+        printFrame.style.top = '-9999px';
+        printFrame.style.left = '-9999px';
+        printFrame.style.width = '0px';
+        printFrame.style.height = '0px';
+        printFrame.style.border = 'none';
+        
+        document.body.appendChild(printFrame);
+        
+        const printDoc = printFrame.contentDocument || printFrame.contentWindow.document;
+        printDoc.open();
+        printDoc.write(printContent);
+        printDoc.close();
+        
+        // Print frame
+        printFrame.contentWindow.print();
+        
+        // Remove frame after printing
+        setTimeout(() => {
+            document.body.removeChild(printFrame);
+            this.isPrinting = false;
+        }, 1000);
+    }
+
+    // Create printable invoice
+    createPrintableInvoice() {
+        const data = this.collectFormData();
+        const customerName = data.customer?.name || data.customerName || 'غير محدد';
+        const customerPhone = data.customer?.phone || data.customerPhone || 'غير محدد';
+        const customerAddress = data.customer?.address || data.customerAddress || 'غير محدد';
+        
+        return `
+            <!DOCTYPE html>
+            <html dir="rtl">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>فاتورة رقم ${data.number}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; direction: rtl; margin: 0; padding: 20px; }
+                    .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+                    .title { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+                    .invoice-info { margin-bottom: 20px; }
+                    .info-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+                    .customer-info { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+                    .logo { width: 120px; height: 120px; object-fit: contain; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto; }
+                    @media print { body { padding: 10px; } }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <img src="images/logo.webp" alt="السهم" class="logo">
+                    <h1>فاتورة التصميم الكامل</h1>
+                    <h2 class="title">رقم: ${data.number}</h2>
+                    <p>التاريخ: ${new Date().toLocaleDateString('ar-SA')}</p>
+                </div>
+                
+                <div class="customer-info">
+                    <h3>معلومات العميل</h3>
+                    <div class="info-row">
+                        <span>الاسم:</span>
+                        <span>${customerName}</span>
+                    </div>
+                    <div class="info-row">
+                        <span>الهاتف:</span>
+                        <span>${customerPhone}</span>
+                    </div>
+                    <div class="info-row">
+                        <span>العنوان:</span>
+                        <span>${customerAddress}</span>
+                    </div>
+                </div>
+                
+                <div class="invoice-info">
+                    <h3>تفاصيل الفاتورة</h3>
+                    <div class="info-row">
+                        <span>السعر:</span>
+                        <span>${data.price || '0'} ريال</span>
+                    </div>
+                    <div class="info-row">
+                        <span>المدفوع:</span>
+                        <span>${data.paid || '0'} ريال</span>
+                    </div>
+                    <div class="info-row">
+                        <span>الباقي:</span>
+                        <span>${data.remaining || '0'} ريال</span>
+                    </div>
+                    ${data.notes ? `
+                    <div class="info-row">
+                        <span>ملاحظات:</span>
+                        <span>${data.notes}</span>
+                    </div>
+                    ` : ''}
+                </div>
+            </body>
+            </html>
+        `;
+    }
+
     // Show notification
     showNotification(message, type = 'info') {
         // Create notification element
@@ -413,6 +527,16 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('❌ Error during initialization:', error);
         }
     } else {
-        console.log('Not on full design invoice page, skipping initialization');
+            console.log('❌ Not on full-design-invoice.html page');
+        }
     }
-});
+);
+
+window.printFullDesignInvoice = function() {
+    console.log('Print button clicked!');
+    if (window.fullDesignInvoiceSystem) {
+        window.fullDesignInvoiceSystem.printInvoice();
+    } else {
+        console.error('❌ Full design invoice system not available!');
+    }
+};

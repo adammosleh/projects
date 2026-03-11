@@ -5,6 +5,36 @@ body {
     font-family: 'Tajawal', sans-serif;
 }
 
+/* Logo Styles */
+.logo-image {
+    width: 10%;
+    height: 10%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    outline: none;
+    border: none;
+}
+
+/* Card Logo Styles */
+.card-logo {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    outline: none;
+    border: none;
+}
+
+/* Invoice Logo Styles */
+.invoice-logo {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    outline: none;
+    border: none;
+}
+
+
+
 /* Custom Scrollbar for Registration Modal */
 .registration-modal-custom {
     scrollbar-width: thin !important;

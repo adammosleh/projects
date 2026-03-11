@@ -61,19 +61,17 @@
 <body class="bg-gray-50">
     <!-- Header -->
     <header class="bg-white shadow-lg sticky top-0 z-50 border-b-2 border-purple-100">
-        <nav class="container mx-auto px-2 sm:px-4 py-2 sm:py-4">
+        <nav class="container mx-auto px-2 sm:px-4 py-1 sm:py-2">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-reverse space-x-2 sm:space-x-4">
-                    <div class="bg-purple-600 p-2 sm:p-3 rounded-full">
-                        <i class="fas fa-store text-white text-lg sm:text-xl"></i>
-                    </div>
+                    <img src="images/logo.webp" alt="السهم" class="w-20 h-20 object-contain card-logo">
                     <div>
                         <h1 class="text-sm sm:text-lg md:text-2xl font-bold text-gray-800">فاتورة عمل الشعارات</h1>
                         <p class="text-xs sm:text-sm text-gray-600 hidden sm:block">إصدار فواتير للشعارات والطباعة</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-reverse space-x-2 sm:space-x-6">
-                    <button onclick="window.location.href='index.html'" class="bg-gray-500 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center text-xs sm:text-sm hover:bg-gray-600 transition">
+                    <button onclick="window.location.href='index.html'" class="bg-gray-500 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center text-xs sm:text-sm hover:bg-gray-600 transition ml-4">
                         <i class="fas fa-arrow-right ml-1 sm:ml-2"></i>
                         <span class="hidden sm:inline">العودة للرئيسية</span>
                         <span class="sm:hidden">الرئيسية</span>
@@ -108,14 +106,17 @@
         <div class="max-w-4xl mx-auto">
             <!-- Invoice Header Card -->
             <div class="invoice-card mb-6 fade-in">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-                    <div class="text-right">
-                        <h2 class="text-2xl font-bold text-gray-800">فاتورة تصميم الشعار</h2>
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+                    <div class="text-center sm:text-right flex-1">
+                        <h2 class="text-2xl font-bold text-gray-800">استمارة تصميم الشعار</h2>
                         <div class="text-sm text-gray-500 mt-2">
                             التاريخ: <span id="invoice-date"></span>
                         </div>
                     </div>
-                    <div class="text-left">
+                    <div class="flex-shrink-0 mx-4 sm:mx-8">
+                        <img src="images/logo.webp" alt="السهم" class="w-16 h-16 object-contain card-logo">
+                    </div>
+                    <div class="text-center flex-1">
                         <div class="text-sm text-gray-500">رقم الفاتورة:</div>
                         <div id="invoice-number" class="font-bold text-purple-600 text-lg">LOGO-001</div>
                     </div>

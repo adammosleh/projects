@@ -264,25 +264,132 @@ class LogoInvoiceSystem {
         this.isPrinting = true;
         console.log('Printing invoice...');
         
-        // Hide buttons and other elements before printing
-        const buttons = document.querySelectorAll('button');
-        const header = document.querySelector('header');
-        const footer = document.querySelector('footer');
+        // Create printable content with logo
+        const printContent = this.createPrintableInvoice();
         
-        buttons.forEach(button => button.classList.add('no-print'));
-        header?.classList.add('no-print');
-        footer?.classList.add('no-print');
+        // Create a new document for printing
+        const printFrame = document.createElement('iframe');
+        printFrame.style.position = 'absolute';
+        printFrame.style.top = '-9999px';
+        printFrame.style.left = '-9999px';
+        printFrame.style.width = '0px';
+        printFrame.style.height = '0px';
+        printFrame.style.border = 'none';
         
-        // Print only the invoice form
-        window.print();
+        document.body.appendChild(printFrame);
         
-        // Restore elements after printing
+        const printDoc = printFrame.contentDocument || printFrame.contentWindow.document;
+        printDoc.open();
+        printDoc.write(printContent);
+        printDoc.close();
+        
+        // Print frame
+        printFrame.contentWindow.print();
+        
+        // Remove frame after printing
         setTimeout(() => {
-            buttons.forEach(button => button.classList.remove('no-print'));
-            header?.classList.remove('no-print');
-            footer?.classList.remove('no-print');
+            document.body.removeChild(printFrame);
             this.isPrinting = false;
         }, 1000);
+    }
+
+    // Create printable invoice
+    createPrintableInvoice() {
+        const data = this.collectFormData();
+        const customerName = data.customerName || 'غير محدد';
+        const customerPhone = data.customerPhone || 'غير محدد';
+        const customerAddress = data.customerAddress || 'غير محدد';
+        
+        return `
+            <!DOCTYPE html>
+            <html dir="rtl">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>فاتورة رقم ${data.number}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; direction: rtl; margin: 0; padding: 20px; }
+                    .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+                    .title { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+                    .invoice-info { margin-bottom: 20px; }
+                    .info-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+                    .customer-info { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+                    .logo { width: 120px; height: 120px; object-fit: contain; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto; }
+                    @media print { body { padding: 10px; } }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <img src="images/logo.webp" alt="السهم" class="logo">
+                    <h1>فاتورة تصميم الشعار</h1>
+                    <h2 class="title">رقم: ${data.number}</h2>
+                    <p>التاريخ: ${new Date().toLocaleDateString('ar-SA')}</p>
+                </div>
+                
+                <div class="customer-info">
+                    <h3>معلومات العميل</h3>
+                    <div class="info-row">
+                        <span>الاسم:</span>
+                        <span>${customerName}</span>
+                    </div>
+                    <div class="info-row">
+                        <span>الهاتف:</span>
+                        <span>${customerPhone}</span>
+                    </div>
+                    <div class="info-row">
+                        <span>العنوان:</span>
+                        <span>${customerAddress}</span>
+                    </div>
+                </div>
+                
+                <div class="invoice-info">
+                    <h3>تفاصيل الفاتورة</h3>
+                    <div class="info-row">
+                        <span>القماش:</span>
+                        <span>${data.fabric || 'غير محدد'}</span>
+                    </div>
+                    <div class="info-row">
+                        <span>الجهة الأولى:</span>
+                        <span>${data.side1 || 'غير محدد'}</span>
+                    </div>
+                    <div class="info-row">
+                        <span>الجهة الثانية:</span>
+                        <span>${data.side2 || 'غير محدد'}</span>
+                    </div>
+                    <div class="info-row">
+                        <span>الخلف:</span>
+                        <span>${data.back || 'غير محدد'}</span>
+                    </div>
+                    <div class="info-row">
+                        <span>لون التطريز:</span>
+                        <span>${data.embroideryColor || 'غير محدد'}</span>
+                    </div>
+                    <div class="info-row">
+                        <span>نوع الخط:</span>
+                        <span>${data.fontType || 'غير محدد'}</span>
+                    </div>
+                    <div class="info-row">
+                        <span>السعر:</span>
+                        <span>${data.price || '0'} ريال</span>
+                    </div>
+                    <div class="info-row">
+                        <span>المدفوع:</span>
+                        <span>${data.paid || '0'} ريال</span>
+                    </div>
+                    <div class="info-row">
+                        <span>الباقي:</span>
+                        <span>${data.remaining || '0'} ريال</span>
+                    </div>
+                    ${data.notes ? `
+                    <div class="info-row">
+                        <span>ملاحظات:</span>
+                        <span>${data.notes}</span>
+                    </div>
+                    ` : ''}
+                </div>
+            </body>
+            </html>
+        `;
     }
 
     // Clear invoice

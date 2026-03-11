@@ -13,18 +13,19 @@
 <body class="bg-gray-50">
     <!-- Header -->
     <header class="bg-white shadow-lg sticky top-0 z-50 border-b-2 border-purple-100">
-        <nav class="container mx-auto px-2 sm:px-4 py-2 sm:py-4">
+        <nav class="container mx-auto px-2 sm:px-4 py-2 sm:py-2">
             <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-reverse space-x-2 sm:space-x-4">
-                    <div class="bg-purple-600 p-2 sm:p-3 rounded-full">
-                        <i class="fas fa-store text-white text-lg sm:text-xl"></i>
-                    </div>
+                <div class="flex items-center space-x-reverse space-x-2 sm:space-x-4 flex-1">
+                    <img src="images/logo.webp" alt="السهم" class="w-6 h-6 sm:w-8 sm:h-8 object-contain logo-image">
                     <div>
-                        <h1 class="text-sm sm:text-lg md:text-2xl font-bold text-gray-800">فاتورة التصميم الكامل</h1>
-                        <p class="text-xs sm:text-sm text-gray-600 hidden sm:block">تصميم العباية بالكامل (جسم، وشاح، قبعة، أكمام)</p>
+                        <h1 class="text-sm sm:text-lg md:text-2xl font-bold text-gray-800">استمارة التصميم الكامل</h1>
+                        <p class="text-xs sm:text-sm text-gray-600 hidden sm:block">تصميم العباية بالكامل (بالطو، شال، قبعة، أكمام)</p>
                     </div>
                 </div>
-                <div class="flex items-center space-x-reverse space-x-2 sm:space-x-6">
+                <div class="flex-shrink-0 mx-4 sm:mx-8">
+                    <img src="images/logo.webp" alt="السهم" class="w-16 h-16 object-contain card-logo">
+                </div>
+                <div class="flex items-center gap-4 space-x-reverse space-x-2 sm:space-x-6 flex-1 justify-end">
                     <button onclick="window.location.href='index.html'" class="btn-secondary text-white px-2 sm:px-4 py-1 sm:py-2 rounded-lg flex items-center text-xs sm:text-sm">
                         <i class="fas fa-arrow-right ml-1 sm:ml-2"></i>
                         <span class="hidden sm:inline">العودة</span>
@@ -56,9 +57,10 @@
                         <p class="text-gray-600"> مركز السهم للخياطة</p>
                     </div>
                     <div class="text-left">
-                        <div class="text-lg font-semibold text-gray-800 mb-1">رقم الفاتورة</div>
-                        <div id="invoice-number" class="text-2xl font-bold text-purple-600">INV-001</div>
-                        <div id="invoice-date" class="text-sm text-gray-600 mt-1">2024/01/01</div>
+                        <button onclick="window.printFullDesignInvoice()" class="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center text-sm hover:bg-blue-700 transition">
+                            <i class="fas fa-print ml-2"></i>
+                            طباعة
+                        </button>
                     </div>
                 </div>
             </div>

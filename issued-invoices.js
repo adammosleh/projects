@@ -546,14 +546,15 @@ class IssuedInvoicesSystem {
                     .invoice-info { margin-bottom: 20px; }
                     .info-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
                     .customer-info { background: #f5f5f5; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+                    .logo { width: 120px; height: 120px; object-fit: contain; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto; }
                     @media print { body { padding: 10px; } }
                 </style>
             </head>
             <body>
                 <div class="header">
+                    <img src="images/logo.webp" alt="السهم" class="logo">
                     <h1>فاتورة</h1>
                     <h2 class="title">رقم: ${invoice.number}</h2>
-                    <h2>رقم: ${invoice.number}</h2>
                     <p>التاريخ: ${new Date(invoice.date).toLocaleDateString('ar-SA')}</p>
                 </div>
                 
